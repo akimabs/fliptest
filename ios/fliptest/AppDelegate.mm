@@ -1,4 +1,6 @@
 #import "AppDelegate.h"
+#import <RCTAppDelegate+Protected.h>
+#import "NativeSampleModule.h"
 
 #import <React/RCTBundleURLProvider.h>
 
@@ -26,6 +28,16 @@
 #else
   return [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
 #endif
+}
+
+- (std::shared_ptr<facebook::react::TurboModule>)getTurboModule:(const std::string &)name
+                                                      jsInvoker:(std::shared_ptr<facebook::react::CallInvoker>)jsInvoker
+{
+  if (name == "NativeSampleModule") {
+    return std::make_shared<facebook::react::NativeSampleModule>(jsInvoker);
+  }
+
+  return [super getTurboModule:name jsInvoker:jsInvoker];
 }
 
 @end

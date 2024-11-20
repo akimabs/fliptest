@@ -15,6 +15,7 @@
 		7699B88040F8A987B510C191 /* libPods-fliptest-fliptestTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-fliptest-fliptestTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		BAED0121845686683E37508D /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */; };
+		E19EE6102CEC95D600F2724C /* NativeSampleModule.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E19EE60E2CEC95D600F2724C /* NativeSampleModule.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -45,6 +46,8 @@
 		5DCACB8F33CDC322A6C60F78 /* libPods-fliptest.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-fliptest.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = fliptest/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-fliptest-fliptestTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-fliptest-fliptestTests.release.xcconfig"; path = "Target Support Files/Pods-fliptest-fliptestTests/Pods-fliptest-fliptestTests.release.xcconfig"; sourceTree = "<group>"; };
+		E19EE60E2CEC95D600F2724C /* NativeSampleModule.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NativeSampleModule.cpp; sourceTree = "<group>"; };
+		E19EE60F2CEC95D600F2724C /* NativeSampleModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NativeSampleModule.h; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -119,6 +122,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				E19EE60D2CEC95D600F2724C /* shared */,
 				13B07FAE1A68108700A75B9A /* fliptest */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* fliptestTests */,
@@ -149,6 +153,16 @@
 				89C6BE57DB24E9ADA2F236DE /* Pods-fliptest-fliptestTests.release.xcconfig */,
 			);
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		E19EE60D2CEC95D600F2724C /* shared */ = {
+			isa = PBXGroup;
+			children = (
+				E19EE60E2CEC95D600F2724C /* NativeSampleModule.cpp */,
+				E19EE60F2CEC95D600F2724C /* NativeSampleModule.h */,
+			);
+			name = shared;
+			path = ../shared;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -397,6 +411,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
+				E19EE6102CEC95D600F2724C /* NativeSampleModule.cpp in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -470,6 +485,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = BYT2YSRPFL;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = fliptest/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
@@ -498,6 +514,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = BYT2YSRPFL;
 				INFOPLIST_FILE = fliptest/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
 				LD_RUNPATH_SEARCH_PATHS = (
