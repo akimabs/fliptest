@@ -1,11 +1,10 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import {useCallback, useMemo, useState} from 'react';
 import {CONSTANT, SortOptionItem} from '@utils/type/constant';
 import {useDebounce} from '@utils/hooks/useDebounce';
 import {getTransaction} from '@api/request/transaction';
 
 export const useTransactionList = () => {
-  const {data: dataTransaction, isLoading} = getTransaction.query({});
+  const {data: dataTransaction, isLoading, refetch} = getTransaction.query({});
 
   const transactions = useMemo(() => {
     return Object.values(dataTransaction ?? {}).map(transaction => {
@@ -39,10 +38,13 @@ export const useTransactionList = () => {
     setFilterQuery(val);
   }, 300);
 
-  const _handleSort = useCallback((option: SortOptionItem) => {
-    _setValueSortOption(option);
-    setModalVisible(false);
-  }, []);
+  const _handleSort = useCallback(
+    (option: SortOptionItem) => {
+      _setValueSortOption(option);
+      setModalVisible(false);
+    },
+    [_setValueSortOption],
+  );
 
   const SORT_OPTIONS_DATA: SortOptionItem[] = useMemo(
     () => [
@@ -69,7 +71,7 @@ export const useTransactionList = () => {
         return false;
       }),
     );
-  }, [filterQuery, dataTransaction]);
+  }, [filterQuery, transactions]);
 
   const sortedTransactions = useMemo(() => {
     if (!filteredTransactions) {
@@ -112,6 +114,7 @@ export const useTransactionList = () => {
     SORT_OPTIONS_DATA,
     filterQuery,
     isLoading,
+    refetch,
     _setFilterQuery,
     _handleSort,
     _setModalVisible,

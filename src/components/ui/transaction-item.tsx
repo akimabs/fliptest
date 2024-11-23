@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, {memo, useCallback, useMemo} from 'react';
 import {CONSTANT} from '@utils/type/constant';
 import {useCountRender} from '@utils/hooks/useCountRender';
@@ -29,7 +28,7 @@ const TransactionItem: React.FC<Props> = memo(({item}) => {
 
   const _navigateTransactionDetail = useCallback(() => {
     navigate('TransactionDetail', {value: item});
-  }, [navigate]);
+  }, [item, navigate]);
 
   const styles = useMemo(() => {
     const isSuccess = status === CONSTANT.SUCCESS;
@@ -51,7 +50,7 @@ const TransactionItem: React.FC<Props> = memo(({item}) => {
         color: isSuccess ? colors.textColorInverse : colors.textColor,
       },
     };
-  }, [colors]);
+  }, [colors, status]);
 
   const formattedAmount = `${formatAmount(amount).replace(
     /\s+/g,

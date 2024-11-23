@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   View,
   Platform,
+  RefreshControl,
 } from 'react-native';
 import TransactionItem from '@components/ui/transaction-item';
 import {ThemeProvider} from '@utils/context/theme-context';
@@ -16,6 +17,7 @@ import {useTransactionList} from './logic/useTransactionList';
 import RadioButton from '@components/ui/radio';
 import {useTheme} from '@utils/hooks/useTheme';
 import {TransactionItemData} from '@utils/contract/transaction';
+import {SortOptionItem} from '@utils/type/constant';
 
 function TransactionList() {
   const {
@@ -23,6 +25,8 @@ function TransactionList() {
     sortOption,
     SORT_OPTIONS_DATA,
     modalVisible,
+    isLoading,
+    refetch,
     _setFilterQuery,
     _handleSort,
     _setModalVisible,
@@ -52,6 +56,21 @@ function TransactionList() {
     [],
   );
 
+  const renderSort = useCallback(
+    ({item}: {item: SortOptionItem}) => {
+      return (
+        <TouchableOpacity
+          onPress={() => _handleSort(item)}
+          key={item.value}
+          style={baseStyles.optionButton}>
+          <RadioButton isSelected={item.value === sortOption.value} />
+          <Text style={baseStyles.optionText}>{item.label}</Text>
+        </TouchableOpacity>
+      );
+    },
+    [_handleSort, sortOption.value],
+  );
+
   const modalFilter = useCallback(
     () => (
       <Modal
@@ -64,15 +83,11 @@ function TransactionList() {
           activeOpacity={1}
           onPress={() => _setModalVisible(false)}>
           <View style={styles.modalContent}>
-            {SORT_OPTIONS_DATA.map(option => (
-              <TouchableOpacity
-                key={option.value}
-                style={baseStyles.optionButton}
-                onPress={() => _handleSort(option)}>
-                <RadioButton isSelected={option.value === sortOption.value} />
-                <Text style={baseStyles.optionText}>{option.label}</Text>
-              </TouchableOpacity>
-            ))}
+            <FlatList
+              data={SORT_OPTIONS_DATA}
+              keyExtractor={item => item.value}
+              renderItem={renderSort}
+            />
           </View>
         </TouchableOpacity>
       </Modal>
@@ -82,10 +97,17 @@ function TransactionList() {
       styles.modalContainer,
       styles.modalContent,
       SORT_OPTIONS_DATA,
+      renderSort,
       _setModalVisible,
-      sortOption.value,
-      _handleSort,
     ],
+  );
+
+  const renderLoadingSkeleton = () => (
+    <View style={baseStyles.loadingContainer}>
+      {Array.from({length: 5}).map((_, index) => (
+        <View key={index} style={baseStyles.loadingItem} />
+      ))}
+    </View>
   );
 
   return (
@@ -96,13 +118,20 @@ function TransactionList() {
           sortLabel={sortOption.label}
           setValue={_setFilterQuery}
         />
-        <FlatList
-          data={sortedTransactions}
-          keyExtractor={item => item.id}
-          renderItem={renderTransaction}
-          ListEmptyComponent={<Text>Tidak ada transaksi</Text>}
-          contentContainerStyle={baseStyles.list}
-        />
+        {isLoading ? (
+          renderLoadingSkeleton()
+        ) : (
+          <FlatList
+            refreshControl={
+              <RefreshControl refreshing={isLoading} onRefresh={refetch} />
+            }
+            data={sortedTransactions}
+            keyExtractor={item => item.id}
+            renderItem={renderTransaction}
+            ListEmptyComponent={<Text>Tidak ada transaksi</Text>}
+            contentContainerStyle={baseStyles.list}
+          />
+        )}
         {modalFilter()}
       </SafeAreaView>
     </ThemeProvider>
@@ -117,6 +146,14 @@ const baseStyles = StyleSheet.create({
   list: {
     padding: 12,
   },
+  loadingContainer: {justifyContent: 'center', alignItems: 'center'},
+  loadingItem: {
+    height: 92,
+    width: '95%',
+    backgroundColor: 'lightgrey',
+    borderRadius: 8,
+    marginTop: 12,
+  },
   modalContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -126,7 +163,6 @@ const baseStyles = StyleSheet.create({
     width: '80%',
     borderRadius: 8,
     padding: 16,
-    alignItems: 'center',
   },
   optionButton: {
     paddingHorizontal: 8,

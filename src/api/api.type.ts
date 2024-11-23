@@ -1,8 +1,7 @@
 import {UseQueryOptions} from '@tanstack/react-query';
-import {TransactionItemData} from '@utils/contract/transaction';
 import {AxiosResponse} from 'axios';
 
-export type TransactionsResponse = Record<string, TransactionItemData>;
+export type TransactionsResponse = Record<string, Object>;
 
 export type TResponseSuccess<D> = AxiosResponse<D>;
 export type TResponseError<D = unknown> = D;
