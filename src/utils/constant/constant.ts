@@ -1,0 +1,6 @@
+enum CONSTANT {
+  SUCCESS = 'SUCCESS',
+  PENDING = 'PENDING',
+}
+
+export {CONSTANT};
