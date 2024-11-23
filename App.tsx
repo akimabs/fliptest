@@ -1,31 +1,13 @@
 import React from 'react';
-import TransactionItem from '@components/ui/transaction-item';
-import {FlatList, SafeAreaView, StyleSheet} from 'react-native';
+import {SafeAreaView, StyleSheet} from 'react-native';
 import {ThemeProvider} from '@utils/context/theme-context';
-import {data} from '@utils/data/data';
+import StackNavigator from '@routes/index';
 
 function App() {
-  const transactions = Object.values(data);
-  const renderTransaction = ({item}: {item: (typeof transactions)[0]}) => (
-    <TransactionItem
-      from={item.sender_bank}
-      to={item.beneficiary_bank}
-      name={item.beneficiary_name}
-      amount={item.amount}
-      date={item.completed_at}
-      status={item.status}
-    />
-  );
-
   return (
     <ThemeProvider>
       <SafeAreaView style={styles.container}>
-        <FlatList
-          data={transactions}
-          keyExtractor={item => item.id}
-          renderItem={renderTransaction}
-          contentContainerStyle={styles.list}
-        />
+        <StackNavigator />
       </SafeAreaView>
     </ThemeProvider>
   );
