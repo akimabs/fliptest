@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-
 import React, {memo, useMemo} from 'react';
-import {CONSTANT} from '@utils/constant/constant';
+import {CONSTANT} from '@utils/type/constant';
 import {useCountRender} from '@utils/hooks/useCountRender';
 import {useTheme} from '@utils/hooks/useTheme';
 import {View, Text, StyleSheet} from 'react-native';
@@ -19,14 +18,17 @@ interface Props {
 const TransactionItem: React.FC<Props> = memo(
   ({from, to, name, amount, date, status}) => {
     const {colors} = useTheme();
-    useCountRender();
+    useCountRender('TransactionItem');
 
     const styles = useMemo(() => {
       const isSuccess = status === CONSTANT.SUCCESS;
       return {
+        wrapperComponent: {
+          ...baseStyles.wrapperComponent,
+          backgroundColor: isSuccess ? colors.success : colors.primary,
+        },
         container: {
           ...baseStyles.container,
-          borderLeftColor: isSuccess ? colors.success : colors.primary,
         },
         statusBadge: {
           ...baseStyles.statusBadge,
@@ -47,26 +49,29 @@ const TransactionItem: React.FC<Props> = memo(
     const formattedAmount = `${new Intl.NumberFormat('id-ID', {
       style: 'currency',
       currency: 'IDR',
-      currencyDisplay: 'narrowSymbol',
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
-    }).format(amount)} • ${formatDate(date)}`;
+    })
+      .format(amount)
+      .replace(/\s+/g, '')} • ${formatDate(date)}`;
 
     const translatedValue =
       status === CONSTANT.SUCCESS ? 'Berhasil' : 'Pengecekan';
 
     return (
-      <View style={styles.container}>
-        <View style={baseStyles.textContainer}>
-          <Text
-            style={
-              baseStyles.bankText
-            }>{`${from.toUpperCase()} ➔ ${to.toUpperCase()}`}</Text>
-          <Text style={baseStyles.nameText}>{`${name.toUpperCase()}`}</Text>
-          <Text style={baseStyles.detailText}>{formattedAmount}</Text>
-        </View>
-        <View style={styles.statusBadge}>
-          <Text style={styledMemo}>{translatedValue}</Text>
+      <View style={styles.wrapperComponent}>
+        <View style={styles.container}>
+          <View style={baseStyles.textContainer}>
+            <Text
+              style={
+                baseStyles.bankText
+              }>{`${from.toUpperCase()} ➔ ${to.toUpperCase()}`}</Text>
+            <Text style={baseStyles.nameText}>{`${name.toUpperCase()}`}</Text>
+            <Text style={baseStyles.detailText}>{formattedAmount}</Text>
+          </View>
+          <View style={styles.statusBadge}>
+            <Text style={styledMemo}>{translatedValue}</Text>
+          </View>
         </View>
       </View>
     );
@@ -79,15 +84,15 @@ const baseStyles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     padding: 12,
-    borderRadius: 8,
-    marginVertical: 6,
+    paddingVertical: 17,
     backgroundColor: '#fff',
-    borderLeftWidth: 4,
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
+    borderTopRightRadius: 8,
+    borderBottomRightRadius: 8,
+  },
+  wrapperComponent: {
+    paddingLeft: 7,
+    marginBottom: 12,
+    borderRadius: 8,
   },
   textContainer: {
     flex: 1,

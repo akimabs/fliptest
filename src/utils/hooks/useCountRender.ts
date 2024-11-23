@@ -1,5 +1,5 @@
 import {useRef} from 'react';
-export const useCountRender = () => {
+export const useCountRender = (component: string) => {
   const renders = useRef(0);
-  console.log('renders: ', renders.current++);
+  console.log(`renders ${component}: `, renders.current++);
 };
