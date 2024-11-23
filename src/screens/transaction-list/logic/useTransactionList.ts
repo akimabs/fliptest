@@ -90,15 +90,15 @@ export const useTransactionList = () => {
             transactionA.beneficiary_name,
           );
         case 'date-newest':
-          return (
-            new Date(transactionB.completed_at).getTime() -
-            new Date(transactionA.completed_at).getTime()
-          );
+          return new Date(transactionB.created_at) >
+            new Date(transactionA.created_at)
+            ? 1
+            : -1;
         case 'date-oldest':
-          return (
-            new Date(transactionA.completed_at).getTime() -
-            new Date(transactionB.completed_at).getTime()
-          );
+          return new Date(transactionA.created_at) >
+            new Date(transactionB.created_at)
+            ? 1
+            : -1;
         default:
           return 0;
       }
