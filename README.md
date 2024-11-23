@@ -4,7 +4,7 @@ This is a new [**React Native**](https://reactnative.dev) project, bootstrapped 
 
 For Android users, you can directly download the APK to test the app without building it locally:
 
-[Download here](https://drive.google.com/file/d/15kyp8JtR2kyNgeGG4Wix_p02engng-FT/view?usp=sharing)
+[Download here](https://drive.google.com/file/d/1LcQTMUJk0rj-D2kyP2iPATvArZBeKobw/view?usp=sharing)
 
 # Getting Started
 
