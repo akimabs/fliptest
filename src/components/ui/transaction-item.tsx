@@ -1,86 +1,87 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {memo, useMemo} from 'react';
+import React, {memo, useCallback, useMemo} from 'react';
 import {CONSTANT} from '@utils/type/constant';
 import {useCountRender} from '@utils/hooks/useCountRender';
 import {useTheme} from '@utils/hooks/useTheme';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {formatDate} from '@utils/func/formatDate';
+import {formatAmount} from '@utils/func/formatAmount';
+import {ParamListBase, useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {TransactionItemData} from '@utils/contract/transaction';
 
 interface Props {
-  from: string;
-  to: string;
-  name: string;
-  amount: number;
-  date: string;
-  status: string;
-  onPress: () => void;
+  item: TransactionItemData;
 }
 
-const TransactionItem: React.FC<Props> = memo(
-  ({from, to, name, amount, date, status, onPress}) => {
-    const {colors} = useTheme();
-    useCountRender('TransactionItem');
+const TransactionItem: React.FC<Props> = memo(({item}) => {
+  const {colors} = useTheme();
+  useCountRender('TransactionItem');
+  const {
+    sender_bank,
+    beneficiary_bank,
+    beneficiary_name,
+    amount,
+    created_at,
+    status,
+  } = item;
+  const {navigate} = useNavigation<NativeStackNavigationProp<ParamListBase>>();
 
-    const styles = useMemo(() => {
-      const isSuccess = status === CONSTANT.SUCCESS;
-      return {
-        wrapperComponent: {
-          ...baseStyles.wrapperComponent,
-          backgroundColor: isSuccess ? colors.success : colors.primary,
-        },
-        container: {
-          ...baseStyles.container,
-        },
-        statusBadge: {
-          ...baseStyles.statusBadge,
-          backgroundColor: isSuccess ? colors.success : colors.light,
-          borderColor: isSuccess ? colors.success : colors.primary,
-        },
-        statusText: {
-          color: isSuccess ? colors.textColorInverse : colors.textColor,
-        },
-      };
-    }, [status]);
+  const _navigateTransactionDetail = useCallback(() => {
+    navigate('TransactionDetail', {value: item});
+  }, [navigate]);
 
-    const styledMemo = useMemo(
-      () => [baseStyles.statusText, styles.statusText],
-      [],
-    );
+  const styles = useMemo(() => {
+    const isSuccess = status === CONSTANT.SUCCESS;
+    return {
+      wrapperComponent: {
+        ...baseStyles.wrapperComponent,
+        backgroundColor: isSuccess ? colors.success : colors.primary,
+      },
+      container: {
+        ...baseStyles.container,
+      },
+      statusBadge: {
+        ...baseStyles.statusBadge,
+        backgroundColor: isSuccess ? colors.success : colors.light,
+        borderColor: isSuccess ? colors.success : colors.primary,
+      },
+      statusText: {
+        ...baseStyles.statusText,
+        color: isSuccess ? colors.textColorInverse : colors.textColor,
+      },
+    };
+  }, [colors]);
 
-    const formattedAmount = `${new Intl.NumberFormat('id-ID', {
-      style: 'currency',
-      currency: 'IDR',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    })
-      .format(amount)
-      .replace(/\s+/g, '')} • ${formatDate(date, 'short')}`;
+  const formattedAmount = `${formatAmount(amount).replace(
+    /\s+/g,
+    '',
+  )} • ${formatDate(created_at, 'short')}`;
 
-    const translatedValue =
-      status === CONSTANT.SUCCESS ? 'Berhasil' : 'Pengecekan';
-
-    return (
-      <TouchableOpacity
-        activeOpacity={0.8}
-        onPress={onPress}
-        style={styles.wrapperComponent}>
-        <View style={styles.container}>
-          <View style={baseStyles.textContainer}>
-            <Text
-              style={
-                baseStyles.bankText
-              }>{`${from.toUpperCase()} ➔ ${to.toUpperCase()}`}</Text>
-            <Text style={baseStyles.nameText}>{`${name.toUpperCase()}`}</Text>
-            <Text style={baseStyles.detailText}>{formattedAmount}</Text>
-          </View>
-          <View style={styles.statusBadge}>
-            <Text style={styledMemo}>{translatedValue}</Text>
-          </View>
+  return (
+    <TouchableOpacity
+      activeOpacity={0.8}
+      onPress={_navigateTransactionDetail}
+      style={styles.wrapperComponent}>
+      <View style={styles.container}>
+        <View style={baseStyles.textContainer}>
+          <Text
+            style={
+              baseStyles.bankText
+            }>{`${sender_bank.toUpperCase()} ➔ ${beneficiary_bank.toUpperCase()}`}</Text>
+          <Text
+            style={
+              baseStyles.nameText
+            }>{`${beneficiary_name.toUpperCase()}`}</Text>
+          <Text style={baseStyles.detailText}>{formattedAmount}</Text>
         </View>
-      </TouchableOpacity>
-    );
-  },
-);
+        <View style={styles.statusBadge}>
+          <Text style={styles.statusText}>{status}</Text>
+        </View>
+      </View>
+    </TouchableOpacity>
+  );
+});
 
 const baseStyles = StyleSheet.create({
   container: {

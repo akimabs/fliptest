@@ -1,17 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import {useCallback, useMemo, useState} from 'react';
 import {CONSTANT, SortOptionItem} from '@utils/type/constant';
-import {data} from '@utils/data/data';
 import {useDebounce} from '@utils/hooks/useDebounce';
-import {ParamListBase, useNavigation} from '@react-navigation/native';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {TransactionItemData} from '@utils/contract/transaction';
+import {getTransaction} from '@api/request/transaction';
 
 export const useTransactionList = () => {
-  const {navigate} = useNavigation<NativeStackNavigationProp<ParamListBase>>();
+  const {data: dataTransaction, isLoading} = getTransaction.query({});
 
   const transactions = useMemo(() => {
-    return Object.values(data).map(transaction => {
+    return Object.values(dataTransaction ?? {}).map(transaction => {
       if (transaction.status.toLowerCase() === 'pending') {
         return {...transaction, status: CONSTANT.PENDING};
       } else if (transaction.status.toLowerCase() === 'success') {
@@ -19,7 +16,7 @@ export const useTransactionList = () => {
       }
       return transaction;
     });
-  }, [data]);
+  }, [dataTransaction]);
 
   const [filterQuery, setFilterQuery] = useState<string>('');
   const [sortOption, setSortOption] = useState<SortOptionItem>({
@@ -47,10 +44,6 @@ export const useTransactionList = () => {
     setModalVisible(false);
   }, []);
 
-  const _navigateTransactionDetail = (value: TransactionItemData) => {
-    navigate('TransactionDetail', {value});
-  };
-
   const SORT_OPTIONS_DATA: SortOptionItem[] = useMemo(
     () => [
       {label: 'URUTKAN', value: 'urutkan'},
@@ -76,7 +69,7 @@ export const useTransactionList = () => {
         return false;
       }),
     );
-  }, [transactions, filterQuery]);
+  }, [filterQuery, dataTransaction]);
 
   const sortedTransactions = useMemo(() => {
     if (!filteredTransactions) {
@@ -118,7 +111,7 @@ export const useTransactionList = () => {
     modalVisible,
     SORT_OPTIONS_DATA,
     filterQuery,
-    _navigateTransactionDetail,
+    isLoading,
     _setFilterQuery,
     _handleSort,
     _setModalVisible,

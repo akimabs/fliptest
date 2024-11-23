@@ -25,6 +25,7 @@ const RadioButton = memo(({isSelected}: RadioOptionComponentProps) => {
         : null,
     };
   }, [colors.primary, isSelected]);
+
   return (
     <View style={styles.option}>
       {isSelected && <View style={styles.radioCircle} />}

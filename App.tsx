@@ -2,15 +2,19 @@ import React from 'react';
 import {SafeAreaView, StatusBar, StyleSheet} from 'react-native';
 import {ThemeProvider} from '@utils/context/theme-context';
 import StackNavigator from '@routes/index';
+import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 
 function App() {
+  const queryClient = new QueryClient();
   return (
-    <ThemeProvider>
-      <StatusBar animated={true} backgroundColor="white" />
-      <SafeAreaView style={styles.container}>
-        <StackNavigator />
-      </SafeAreaView>
-    </ThemeProvider>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider>
+        <StatusBar animated={true} backgroundColor="white" />
+        <SafeAreaView style={styles.container}>
+          <StackNavigator />
+        </SafeAreaView>
+      </ThemeProvider>
+    </QueryClientProvider>
   );
 }
 

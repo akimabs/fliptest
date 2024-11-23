@@ -23,15 +23,14 @@ function TransactionList() {
     sortOption,
     SORT_OPTIONS_DATA,
     modalVisible,
-    _navigateTransactionDetail,
     _setFilterQuery,
     _handleSort,
     _setModalVisible,
   } = useTransactionList();
   const {colors} = useTheme();
 
-  const styles = useMemo(() => {
-    return {
+  const styles = useMemo(
+    () => ({
       container: {
         ...baseStyles.container,
         backgroundColor: colors.backgroundColor,
@@ -44,27 +43,21 @@ function TransactionList() {
         ...baseStyles.modalContent,
         backgroundColor: colors.backgroundColor,
       },
-    };
-  }, [colors]);
-
-  const renderTransaction = ({item}: {item: TransactionItemData}) => (
-    <TransactionItem
-      onPress={() => _navigateTransactionDetail(item)}
-      from={item.sender_bank}
-      to={item.beneficiary_bank}
-      name={item.beneficiary_name}
-      amount={item.amount}
-      date={item.completed_at}
-      status={item.status}
-    />
+    }),
+    [colors],
   );
 
-  const modalFilter = useCallback(() => {
-    return (
+  const renderTransaction = useCallback(
+    ({item}: {item: TransactionItemData}) => <TransactionItem item={item} />,
+    [],
+  );
+
+  const modalFilter = useCallback(
+    () => (
       <Modal
         visible={modalVisible}
         animationType="fade"
-        transparent={true}
+        transparent
         onRequestClose={() => _setModalVisible(false)}>
         <TouchableOpacity
           style={styles.modalContainer}
@@ -83,15 +76,17 @@ function TransactionList() {
           </View>
         </TouchableOpacity>
       </Modal>
-    );
-  }, [
-    SORT_OPTIONS_DATA,
-    _handleSort,
-    _setModalVisible,
-    modalVisible,
-    sortOption.value,
-    styles,
-  ]);
+    ),
+    [
+      modalVisible,
+      styles.modalContainer,
+      styles.modalContent,
+      SORT_OPTIONS_DATA,
+      _setModalVisible,
+      sortOption.value,
+      _handleSort,
+    ],
+  );
 
   return (
     <ThemeProvider>

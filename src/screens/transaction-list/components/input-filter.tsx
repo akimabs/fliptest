@@ -28,7 +28,7 @@ function InputFilter({onClickFilter, sortLabel, setValue}: Props) {
         color: colors.primary,
       },
     };
-  }, [colors.primary]);
+  }, [colors]);
 
   return (
     <View style={baseStyles.container}>

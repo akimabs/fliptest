@@ -11,6 +11,7 @@ import {
   TouchableOpacity,
   Dimensions,
 } from 'react-native';
+import {formatAmount} from '@utils/func/formatAmount';
 
 type RootStackParamList = {
   TransactionDetail: {
@@ -22,13 +23,6 @@ function TransactionDetail() {
   const {colors} = useTheme();
   const route = useRoute<RouteProp<RootStackParamList, 'TransactionDetail'>>();
   const value = route.params.value;
-
-  const formattedAmount = `${new Intl.NumberFormat('id-ID', {
-    style: 'currency',
-    currency: 'IDR',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(value.amount)}`.replace(/\s+/g, '');
 
   const styles = useMemo(() => {
     return {
@@ -83,7 +77,7 @@ function TransactionDetail() {
             </View>
             <View style={baseStyles.viewItem}>
               <Text style={baseStyles.label}>NOMINAL</Text>
-              <Text style={baseStyles.value}>{formattedAmount}</Text>
+              <Text style={baseStyles.value}>{formatAmount(value.amount)}</Text>
             </View>
           </View>
 
