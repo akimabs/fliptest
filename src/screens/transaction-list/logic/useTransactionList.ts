@@ -3,8 +3,13 @@ import {useCallback, useMemo, useState} from 'react';
 import {CONSTANT, SortOptionItem} from '@utils/type/constant';
 import {data} from '@utils/data/data';
 import {useDebounce} from '@utils/hooks/useDebounce';
+import {ParamListBase, useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {TransactionItemData} from '@utils/contract/transaction';
 
 export const useTransactionList = () => {
+  const {navigate} = useNavigation<NativeStackNavigationProp<ParamListBase>>();
+
   const transactions = useMemo(() => {
     return Object.values(data).map(transaction => {
       if (transaction.status.toLowerCase() === 'pending') {
@@ -37,9 +42,13 @@ export const useTransactionList = () => {
     setFilterQuery(val);
   }, 300);
 
-  const _handleSort = (option: SortOptionItem) => {
+  const _handleSort = useCallback((option: SortOptionItem) => {
     _setValueSortOption(option);
     setModalVisible(false);
+  }, []);
+
+  const _navigateTransactionDetail = (value: TransactionItemData) => {
+    navigate('TransactionDetail', {value});
   };
 
   const SORT_OPTIONS_DATA: SortOptionItem[] = useMemo(
@@ -109,6 +118,7 @@ export const useTransactionList = () => {
     modalVisible,
     SORT_OPTIONS_DATA,
     filterQuery,
+    _navigateTransactionDetail,
     _setFilterQuery,
     _handleSort,
     _setModalVisible,

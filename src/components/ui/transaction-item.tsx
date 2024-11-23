@@ -3,7 +3,7 @@ import React, {memo, useMemo} from 'react';
 import {CONSTANT} from '@utils/type/constant';
 import {useCountRender} from '@utils/hooks/useCountRender';
 import {useTheme} from '@utils/hooks/useTheme';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {formatDate} from '@utils/func/formatDate';
 
 interface Props {
@@ -13,10 +13,11 @@ interface Props {
   amount: number;
   date: string;
   status: string;
+  onPress: () => void;
 }
 
 const TransactionItem: React.FC<Props> = memo(
-  ({from, to, name, amount, date, status}) => {
+  ({from, to, name, amount, date, status, onPress}) => {
     const {colors} = useTheme();
     useCountRender('TransactionItem');
 
@@ -53,13 +54,16 @@ const TransactionItem: React.FC<Props> = memo(
       maximumFractionDigits: 0,
     })
       .format(amount)
-      .replace(/\s+/g, '')} • ${formatDate(date)}`;
+      .replace(/\s+/g, '')} • ${formatDate(date, 'short')}`;
 
     const translatedValue =
       status === CONSTANT.SUCCESS ? 'Berhasil' : 'Pengecekan';
 
     return (
-      <View style={styles.wrapperComponent}>
+      <TouchableOpacity
+        activeOpacity={0.8}
+        onPress={onPress}
+        style={styles.wrapperComponent}>
         <View style={styles.container}>
           <View style={baseStyles.textContainer}>
             <Text
@@ -73,7 +77,7 @@ const TransactionItem: React.FC<Props> = memo(
             <Text style={styledMemo}>{translatedValue}</Text>
           </View>
         </View>
-      </View>
+      </TouchableOpacity>
     );
   },
 );

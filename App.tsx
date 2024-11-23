@@ -1,11 +1,12 @@
 import React from 'react';
-import {SafeAreaView, StyleSheet} from 'react-native';
+import {SafeAreaView, StatusBar, StyleSheet} from 'react-native';
 import {ThemeProvider} from '@utils/context/theme-context';
 import StackNavigator from '@routes/index';
 
 function App() {
   return (
     <ThemeProvider>
+      <StatusBar animated={true} backgroundColor="white" />
       <SafeAreaView style={styles.container}>
         <StackNavigator />
       </SafeAreaView>
@@ -16,7 +17,7 @@ function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: 'white',
   },
   list: {
     padding: 12,

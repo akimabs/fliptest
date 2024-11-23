@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useMemo} from 'react';
 import {
   FlatList,
   Modal,
@@ -14,6 +14,8 @@ import {ThemeProvider} from '@utils/context/theme-context';
 import InputFilter from './components/input-filter';
 import {useTransactionList} from './logic/useTransactionList';
 import RadioButton from '@components/ui/radio';
+import {useTheme} from '@utils/hooks/useTheme';
+import {TransactionItemData} from '@utils/contract/transaction';
 
 function TransactionList() {
   const {
@@ -21,17 +23,33 @@ function TransactionList() {
     sortOption,
     SORT_OPTIONS_DATA,
     modalVisible,
+    _navigateTransactionDetail,
     _setFilterQuery,
     _handleSort,
     _setModalVisible,
   } = useTransactionList();
+  const {colors} = useTheme();
 
-  const renderTransaction = ({
-    item,
-  }: {
-    item: (typeof sortedTransactions)[0];
-  }) => (
+  const styles = useMemo(() => {
+    return {
+      container: {
+        ...baseStyles.container,
+        backgroundColor: colors.backgroundColor,
+      },
+      modalContainer: {
+        ...baseStyles.modalContainer,
+        backgroundColor: colors.backdrop,
+      },
+      modalContent: {
+        ...baseStyles.modalContent,
+        backgroundColor: colors.backgroundColor,
+      },
+    };
+  }, [colors]);
+
+  const renderTransaction = ({item}: {item: TransactionItemData}) => (
     <TransactionItem
+      onPress={() => _navigateTransactionDetail(item)}
       from={item.sender_bank}
       to={item.beneficiary_bank}
       name={item.beneficiary_name}
@@ -56,10 +74,10 @@ function TransactionList() {
             {SORT_OPTIONS_DATA.map(option => (
               <TouchableOpacity
                 key={option.value}
-                style={styles.optionButton}
+                style={baseStyles.optionButton}
                 onPress={() => _handleSort(option)}>
                 <RadioButton isSelected={option.value === sortOption.value} />
-                <Text style={styles.optionText}>{option.label}</Text>
+                <Text style={baseStyles.optionText}>{option.label}</Text>
               </TouchableOpacity>
             ))}
           </View>
@@ -71,7 +89,8 @@ function TransactionList() {
     _handleSort,
     _setModalVisible,
     modalVisible,
-    sortOption,
+    sortOption.value,
+    styles,
   ]);
 
   return (
@@ -87,7 +106,7 @@ function TransactionList() {
           keyExtractor={item => item.id}
           renderItem={renderTransaction}
           ListEmptyComponent={<Text>Tidak ada transaksi</Text>}
-          contentContainerStyle={styles.list}
+          contentContainerStyle={baseStyles.list}
         />
         {modalFilter()}
       </SafeAreaView>
@@ -95,34 +114,21 @@ function TransactionList() {
   );
 }
 
-const styles = StyleSheet.create({
+const baseStyles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
     marginTop: Platform.OS === 'android' ? 20 : 0,
   },
   list: {
     padding: 12,
   },
-  sortButton: {
-    padding: 12,
-    backgroundColor: '#ff6600',
-    borderRadius: 4,
-    alignItems: 'center',
-    margin: 12,
-  },
-  sortButtonText: {
-    fontWeight: 'bold',
-  },
   modalContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalContent: {
     width: '80%',
-    backgroundColor: '#fff',
     borderRadius: 8,
     padding: 16,
     alignItems: 'center',
